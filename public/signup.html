@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do List</title>
+    <link rel="stylesheet" href="Styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro</h1>
+        <form id="FormSignup" method="POST">
+            <input id="user" type="text" placeholder="Nome de usuário" required>
+            <input id="password" type="password" placeholder="Senha" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div class="footer">
+            Já tem uma conta? <a href="login.html">Fazer Login</a>
+        </div>
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+    <script src="js/signup.js"></script>
+</body>
+</html>
