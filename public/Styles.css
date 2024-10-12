@@ -65,3 +65,12 @@ button:hover {
     color: red;
     display: none;
 }
+
+.delete-button {
+    cursor: pointer;
+    color: red;
+}
+
+.delete-button:hover {
+    text-decoration: underline;
+}

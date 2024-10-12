@@ -14,11 +14,20 @@ const TaskModel = {
             callback(null, results.insertId);
         });
     },
-
+    getAllTasks: async () => {
+        try {
+            const query = 'SELECT * FROM Tasks';
+            const [results] = await db.query(query);
+            return results;
+        } catch (error) {
+            console.error('Erro ao buscar tarefas:', error);
+            throw new Error('Erro ao buscar tarefas.');
+        }
+    },
     // delTask: (id) => {
     //     const query = ('DELETE FROM Tasks WHERE id = ?', [taskId]);
-        
-    // }
+            
+    //  }
 };
 
 module.exports = TaskModel;
