@@ -168,8 +168,14 @@ function closeEditForm() {
 document.getElementById('logoutButton').addEventListener('click', function() {
     localStorage.removeItem('token');
     window.location.href = '/login.html';
+    history.replaceState(null, '', '/login.html'); 
 });
 
 window.onload = function() {
-    updateTaskList(); 
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+    } else {
+        updateTaskList();
+    } 
 };
