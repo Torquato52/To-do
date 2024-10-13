@@ -52,6 +52,44 @@ const TaskController = {
             console.error('Erro ao deletar tarefa:', error);
             return res.status(500).json({ mensagem: error.message });
         }
+    },
+
+    updateTaskStatus: async (req, res) => {
+        const { id } = req.params;
+        const idUser = req.user.id;
+        const newStatus = 'Concluída';
+        try {
+            const result = await TaskModel.updateStatusTask(id, idUser, newStatus);
+            if (result.status === 200) {
+                res.status(200).json({ mensagem: result.mensagem, tasks: result.tasks });
+            } else {
+                res.status(result.status).json({ mensagem: result.mensagem });
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar o status da tarefa:', error);
+            res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+        }
+    },
+    updateTask: async (req, res) => {
+        const { name, description } = req.body;
+        const idUser = req.user.id;
+        const taskId = req.params.id;
+
+        try {
+            if (!name || !description) {
+                return res.status(400).send('Nome e descrição são obrigatórios.');
+            }
+
+            const result = await TaskModel.updateTask(taskId, name, description, idUser);
+            if (result.affectedRows > 0) {
+                return res.status(200).json({ mensagem: 'Tarefa atualizada com sucesso.' });
+            } else {
+                return res.status(404).json({ mensagem: 'Tarefa não encontrada ou você não tem permissão para atualizá-la.' });
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar tarefa:', error);
+            res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+        }
     }
 };
 

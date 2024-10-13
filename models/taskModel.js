@@ -42,7 +42,36 @@ const TaskModel = {
             throw new Error('Erro ao deletar a tarefa: ' + error.message);
         }
     },
-    
+
+    updateStatusTask: async (id, idUser, newStatus) => {
+        const taskQuery = 'SELECT * FROM Tasks WHERE id = ? AND idUser = ?';
+        const updateQuery = 'UPDATE Tasks SET status = ? WHERE id = ? AND idUser = ?';
+        try {
+            const [task] = await db.query(taskQuery, [id, idUser]);
+            if (!task || task.length === 0) {
+                return { mensagem: 'Tarefa não encontrada ou você não tem permissão para alterá-la.', status: 404 };
+            }
+            const [result] = await db.query(updateQuery, [newStatus, id, idUser]);
+            if (result.affectedRows > 0) {
+                const tasks = await TaskModel.getAllTasks(idUser);
+                await redisClient.setEx(`tasks_${idUser}`, 3600, JSON.stringify(tasks));
+                return { mensagem: 'Status da tarefa atualizado com sucesso.', status: 200, tasks };
+            } else {
+                return { mensagem: 'Tarefa não encontrada.', status: 404 };
+            }
+        } catch (error) {
+            throw new Error('Erro ao atualizar o status da tarefa: ' + error.message);
+        }
+    },
+    updateTask: async (id, name, description, idUser) => {
+        const updateQuery = 'UPDATE Tasks SET name = ?, description = ? WHERE id = ? AND idUser = ?';
+        try {
+            const [result] = await db.query(updateQuery, [name, description, id, idUser]);
+            return result;
+        } catch (error) {
+            throw new Error('Erro ao atualizar a tarefa: ' + error.message);
+        }
+    },
 };
 
 module.exports = TaskModel;
