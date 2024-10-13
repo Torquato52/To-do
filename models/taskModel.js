@@ -63,15 +63,18 @@ const TaskModel = {
             throw new Error('Erro ao atualizar o status da tarefa: ' + error.message);
         }
     },
-    updateTask: async (id, name, description, idUser) => {
-        const updateQuery = 'UPDATE Tasks SET name = ?, description = ? WHERE id = ? AND idUser = ?';
+    updateTask: async (id, name, description, status, idUser) => {
+        const query = 'UPDATE Tasks SET name = ?, description = ?, status = ? WHERE id = ? AND idUser = ?';
         try {
-            const [result] = await db.query(updateQuery, [name, description, id, idUser]);
-            return result;
+            const [result] = await db.query(query, [name, description, status, id, idUser]);
+            if (!result || result.affectedRows === 0) {
+                throw new Error('Tarefa não encontrada ou você não tem permissão para atualizá-la.');
+            }
+            return result;  
         } catch (error) {
             throw new Error('Erro ao atualizar a tarefa: ' + error.message);
         }
-    },
+    }
 };
 
 module.exports = TaskModel;

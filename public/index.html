@@ -40,6 +40,17 @@
             <label for="editTaskDescription">Descrição:</label>
             <textarea id="editTaskDescription" required></textarea>
             <br>
+            <br>
+            <label>Status:</label>
+            <div>
+              <label>
+                <input type="radio" name="status" value="Pendente" id="editStatusPendente" checked> Pendente
+              </label>
+              <label>
+                <input type="radio" name="status" value="Concluida" id="editStatusConcluido"> Concluído
+              </label>
+            </div>
+            <br>
             <button id="saveEditButton">Salvar</button>
             <button onclick="closeEditForm()">Cancelar</button>
         </div>

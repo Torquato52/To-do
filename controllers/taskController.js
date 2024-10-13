@@ -11,7 +11,6 @@ const TaskController = {
             }
             await TaskModel.createTask(name, description, idUser);
             const tasks = await TaskModel.getAllTasks(idUser);
-            console.log('Tarefa criada. Todas as tarefas:', tasks);
             await redisClient.setEx('tasks', 3600, JSON.stringify(tasks));
             res.status(201).json({ mensagem: 'Tarefa criada com sucesso.' });
         } catch (error) {
@@ -22,16 +21,13 @@ const TaskController = {
     
     listTask: async (req, res) => {
         const idUser = req.user.id;
-        console.log('idUser obtido do token:', idUser); 
         const cacheKey = `tasks_${idUser}`;
         try {
             const tasks = await TaskModel.getAllTasks(idUser);
-            console.log('Tarefas obtidas do banco de dados:', tasks);
             if (!tasks || tasks.length === 0) {
                 return res.json([]);
             }
             await redisClient.setEx(cacheKey, 3600, JSON.stringify(tasks));
-            console.log('Tarefas armazenadas no cache:', tasks);
             res.json(tasks);
         } catch (error) {
             console.error('Erro ao listar tarefas:', error);
@@ -71,7 +67,7 @@ const TaskController = {
         }
     },
     updateTask: async (req, res) => {
-        const { name, description } = req.body;
+        const { name, description, status } = req.body;
         const idUser = req.user.id;
         const taskId = req.params.id;
 
@@ -80,7 +76,7 @@ const TaskController = {
                 return res.status(400).send('Nome e descrição são obrigatórios.');
             }
 
-            const result = await TaskModel.updateTask(taskId, name, description, idUser);
+            const result = await TaskModel.updateTask(taskId, name, description, status, idUser);
             if (result.affectedRows > 0) {
                 return res.status(200).json({ mensagem: 'Tarefa atualizada com sucesso.' });
             } else {

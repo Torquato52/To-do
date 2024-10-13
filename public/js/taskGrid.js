@@ -77,7 +77,6 @@ function submitTask() {
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.onload = function() {
         if (xhr.status === 201) {
-            console.log('Resposta do servidor:', xhr.responseText);
             updateTaskList();
         } else {
             console.error('Erro ao criar tarefa:', xhr.responseText);
@@ -110,11 +109,14 @@ function completedTask(id) {
     xhr.send();
 }
 
-function editTask(id, name, description) {
+function editTask(id, name, description, status) {
     document.getElementById('editTaskName').value = name;
     document.getElementById('editTaskDescription').value = description;
+    const statusRadios = document.getElementsByName('status');
+    statusRadios.forEach(radio => {
+        radio.checked = (radio.value === status);
+    });
     document.getElementById('editModal').style.display = 'block';
-
     document.getElementById('saveEditButton').onclick = function() {
         updateTask(id);
     };
@@ -123,6 +125,7 @@ function editTask(id, name, description) {
 function updateTask(id) {
     const name = document.getElementById('editTaskName').value.trim();
     const description = document.getElementById('editTaskDescription').value.trim();
+    const status = document.querySelector('input[name="status"]:checked').value;
     if (!name || !description) {
         alert('Preencha todos os campos!');
         return;
@@ -146,7 +149,7 @@ function updateTask(id) {
         console.error('Erro na requisição.');
     };
 
-    const data = JSON.stringify({ name, description });
+    const data = JSON.stringify({ name, description, status });
     xhr.send(data);
 }
 
