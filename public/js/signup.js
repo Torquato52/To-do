@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const successMessage = document.getElementById('successMessage');
             successMessage.style.display = 'block';
             successMessage.textContent = 'Cadastro realizado com sucesso!';
-            console.log('Login bem-sucedido:', data);
             setTimeout(() => {
                 successMessage.style.display = 'none';
             }, 3000);

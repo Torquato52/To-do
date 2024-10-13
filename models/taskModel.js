@@ -1,21 +1,14 @@
 const db = require('../config/db');
+const redisClient = require('../config/redisConfig');
 
 const TaskModel = {
     createTask: async (name, description, idUser) => {
         const status = 'pendente';
         const query = 'INSERT INTO Tasks (name, description, status, idUser) VALUES (?, ?, ?, ?)';
-        console.log('Criando tarefa com os seguintes dados:');
-        console.log('Nome:', name);
-        console.log('Descrição:', description);
-        console.log('Status:', status);
-        console.log('ID do Usuário:', idUser);
-        
         try {
             const [results] = await db.query(query, [name, description, status, idUser]);
-            console.log('Tarefa inserida com sucesso:', results.insertId);
             return results.insertId;
         } catch (error) {
-            console.error('Erro ao inserir a tarefa:', error);
             throw new Error('Erro ao criar a tarefa.');
         }
     },
@@ -25,7 +18,6 @@ const TaskModel = {
             const [results] = await db.query(query, [idUser]);
             return results;
         } catch (error) {
-            console.error('Erro ao buscar tarefas:', error);
             throw new Error('Erro ao buscar tarefas.');
         }
     },

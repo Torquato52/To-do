@@ -33,29 +33,6 @@ function updateTaskList() {
     xhr.send();
 }
 
-function registerTask(name, description, idUser) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/tasks/register", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    xhr.onload = function() {
-        if (xhr.status === 201) {
-            alert('Tarefa criada com sucesso.');
-            updateTaskList();
-        } else {
-            console.error('Erro ao criar tarefa:', xhr.responseText);
-            alert('Erro ao criar tarefa.');
-        }
-    };
-
-    xhr.onerror = function() {
-        console.error('Erro na requisição.');
-    };
-
-    const data = JSON.stringify({ name, description });
-    xhr.send(data);
-}
-
 function deleteTask(id) {
     const token = localStorage.getItem('token');
     const xhr = new XMLHttpRequest();
@@ -63,7 +40,6 @@ function deleteTask(id) {
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
-            console.log('Tarefa deletada com sucesso.');
             updateTaskList();
         } else {
             console.error('Erro ao deletar tarefa:', xhr.responseText);
@@ -83,22 +59,18 @@ function submitTask() {
         alert('Preencha todos os campos!');
         return;
     }
-    console.log('Enviando tarefa:');
-    console.log('Nome:', name);
-    console.log('Descrição:', description);
 
     const xhr = new XMLHttpRequest();
+    const token = localStorage.getItem('token');
     xhr.open("POST", "/tasks/register", true);
     xhr.setRequestHeader("Content-Type", "application/json");
-
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.onload = function() {
         if (xhr.status === 201) {
             console.log('Resposta do servidor:', xhr.responseText);
-            alert('Tarefa criada com sucesso.');
             updateTaskList();
         } else {
             console.error('Erro ao criar tarefa:', xhr.responseText);
-            alert('Erro ao criar tarefa.');
         }
     };
 
@@ -107,7 +79,6 @@ function submitTask() {
     };
 
     const data = JSON.stringify({ name, description });
-    console.log('Dados enviados para o servidor:', data); 
     xhr.send(data);
 }
 

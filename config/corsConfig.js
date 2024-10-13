@@ -12,5 +12,4 @@ const corConfig = {
     credentials: true,
 };
 
-
 module.exports = corConfig;
