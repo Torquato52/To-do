@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             console.log('Login bem-sucedido:', data);
+            localStorage.setItem('token', data.token); 
+            console.log('Login bem-sucedido:', data.token);
             window.location.href = '/index.html';
         })
         .catch(error => {

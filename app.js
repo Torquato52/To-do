@@ -13,7 +13,7 @@ app.use(cors(corsConfig));
 app.use(bodyParser.json());
 
 app.use('/user', userRoutes);
-app.use('/tasks', taskRoutes)
+app.use('/tasks', taskRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port, () => {

@@ -1,4 +1,4 @@
-const allowedOrigins = ['http://localhost:3000', 'https://www.seudominio.com'];
+const allowedOrigins = ['http://localhost:3000'];
 
 const corConfig = {
     origin: (origin, callback) => {

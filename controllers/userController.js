@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/userModel');
+const { generateToken } = require('../config/jwt'); 
 
 const UserController = {
     registerUser: async (req, res) => {
@@ -28,17 +29,20 @@ const UserController = {
             }
             const userData = await UserModel.findUser(user);
             if (!userData) {
-                return res.status(401).json({ message: 'Usuário ou Senha invalidos.' });
+                return res.status(401).json({ message: 'Usuário ou Senha inválidos.' });
             }
             const isPasswordValid = UserModel.validatePassword(password, userData.password);
             if (!isPasswordValid) {
-                return res.status(401).json({ message: 'Usuário ou Senha invalidos.' });
+                return res.status(401).json({ message: 'Usuário ou Senha inválidos.' });
             }
-            res.status(200).json({ message: 'Login bem-sucedido.' });
+            const token = generateToken(userData.id);
+            res.status(200).json({ message: 'Login bem-sucedido.', token });
         } catch (error) {
+            console.error('Erro no login:', error);
             res.status(500).json({ message: 'Deu algo errado.' });
         }
     },
+    
 };
 
 module.exports = UserController;

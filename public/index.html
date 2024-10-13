@@ -8,6 +8,21 @@
     <title>To-do</title>
   </head>
   <body>
+    <button id="addTaskButton">Adicionar Tarefa</button>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <h3>Nova Tarefa</h3>
+        <label for="taskName">Nome:</label>
+        <input type="text" id="taskName" required>
+        <br>
+        <label for="taskDescription">Descrição:</label>
+        <textarea id="taskDescription" required></textarea>
+        <br>
+        <button onclick="submitTask()">Salvar</button>
+        <button onclick="closeTaskForm()">Cancelar</button>
+      </div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -17,8 +32,9 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody id="taskTable">
-        </tbody>
-        <script src="js/taskList.js"></script>
+        <tbody id="taskTable"></tbody>
+    </table>
+        <script src="js/taskGrid.js"></script>
+        <div id="feedback" style="display:none;"></div>
       </body>
 </html>
