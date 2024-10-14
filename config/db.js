@@ -1,14 +1,25 @@
-const sql = require('mysql2/promise');
+require('dotenv').config();
+const sql = require('mssql');
 
-const db = sql.createPool({
-    host: 'localhost',
-    user: 'admin',
-    password: '12345',
-    database: 'task_manager',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+const config = {
+    user: process.env.AZURE_SQL_USER,
+    password: process.env.AZURE_SQL_PASSWORD,
+    server: process.env.AZURE_SQL_SERVER,
+    database: process.env.AZURE_SQL_DATABASE,
+    options: {
+        encrypt: true,
+        trustServerCertificate: true 
+    }
+};
 
+const connectToDatabase = async () => {
+    try {
+        const pool = await sql.connect(config);
+        return pool;
+    } catch (error) {
+        console.error("Erro ao conectar ao banco de dados:", error);
+        throw error;
+    }
+};
 
-module.exports = db;
+module.exports = { connectToDatabase };

@@ -137,7 +137,6 @@ function updateTask(id) {
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.onload = function() {
         if (xhr.status === 200) {
-            console.log('Tarefa atualizada com sucesso:', xhr.responseText);
             updateTaskList();
             closeEditForm();
         } else {

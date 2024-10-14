@@ -3,22 +3,24 @@ const redisClient = require('../config/redisConfig');
 
 const TaskController = {
     registerTask: async (req, res) => {
-        const { name, description} = req.body;
+        const { name, description } = req.body;
         const idUser = req.user.id;
         try {
             if (!name || !description || !idUser) {
                 return res.status(400).send('Nome e descrição são de preenchimento obrigatório.');
             }
-            await TaskModel.createTask(name, description, idUser);
+
+            const taskId = await TaskModel.createTask(name, description, idUser);
             const tasks = await TaskModel.getAllTasks(idUser);
-            await redisClient.setEx('tasks', 3600, JSON.stringify(tasks));
-            res.status(201).json({ mensagem: 'Tarefa criada com sucesso.' });
+
+            await redisClient.setEx(`tasks_${idUser}`, 3600, JSON.stringify(tasks));
+            res.status(201).json({ mensagem: 'Tarefa criada com sucesso.', taskId });
         } catch (error) {
             console.error('Erro ao registrar tarefa:', error);
             res.status(500).json({ mensagem: 'Erro interno do servidor.' });
-        }     
+        }
     },
-    
+
     listTask: async (req, res) => {
         const idUser = req.user.id;
         const cacheKey = `tasks_${idUser}`;
@@ -27,11 +29,12 @@ const TaskController = {
             if (!tasks || tasks.length === 0) {
                 return res.json([]);
             }
+
             await redisClient.setEx(cacheKey, 3600, JSON.stringify(tasks));
             res.json(tasks);
         } catch (error) {
             console.error('Erro ao listar tarefas:', error);
-            res.status(500).json({ mensagem: error.message });
+            res.status(500).json({ mensagem: 'Erro interno do servidor.' });
         }
     },
 
@@ -41,12 +44,13 @@ const TaskController = {
         try {
             const result = await TaskModel.delTask(id, idUser);
             if (result.status === 200) {
-                await redisClient.setEx(`tasks_${idUser}`, 3600, JSON.stringify(result));
+                const tasks = result.tasks;
+                await redisClient.setEx(`tasks_${idUser}`, 3600, JSON.stringify(tasks));
             }
             return res.status(result.status).json({ mensagem: result.mensagem });
         } catch (error) {
             console.error('Erro ao deletar tarefa:', error);
-            return res.status(500).json({ mensagem: error.message });
+            return res.status(500).json({ mensagem: 'Erro interno do servidor.' });
         }
     },
 
@@ -66,6 +70,7 @@ const TaskController = {
             res.status(500).json({ mensagem: 'Erro interno do servidor.' });
         }
     },
+
     updateTask: async (req, res) => {
         const { name, description, status } = req.body;
         const idUser = req.user.id;
@@ -77,7 +82,7 @@ const TaskController = {
             }
 
             const result = await TaskModel.updateTask(taskId, name, description, status, idUser);
-            if (result.affectedRows > 0) {
+            if (result.rowsAffected[0] > 0) {
                 return res.status(200).json({ mensagem: 'Tarefa atualizada com sucesso.' });
             } else {
                 return res.status(404).json({ mensagem: 'Tarefa não encontrada ou você não tem permissão para atualizá-la.' });
@@ -89,4 +94,4 @@ const TaskController = {
     }
 };
 
-module.exports = TaskController; 
+module.exports = TaskController;
