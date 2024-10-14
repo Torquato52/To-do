@@ -1,0 +1,10 @@
+O primeiro erro que enfrentei foi ao criar meu ambiente WSL para um novo projeto em Node onde tive problemas com o MySQL e, por fim, optei pelo MariaDB, que é uma alternativa mais compatível com Linux.
+
+O segundo erro foi com o CORS ao fazer uma requisição AJAX para a API,
+consegui resolver configurando o CORS no app.js e também utilizando o Path para acessar meu diretório de login.
+
+Depois, tive alguns problemas com o Redis, que não queria ser limpo.
+Além disso, enfrentei dificuldades ao fazer requisições para o banco de dados na Cloud, 
+pois as queries precisavam ser diferentes por se tratar do SQL Server (estava usando o MariaDB), e algumas entradas estavam com a sintaxe errada.
+
+Por fim, tive mais problemas com a Cloud, pois não consegui abrir requisições para a API.
