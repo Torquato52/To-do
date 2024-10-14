@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" 
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="IndexStyle.css" />
+    <title>To-do</title>
+  </head>
+  <body>
+    <header>
+      <h1>Bem-vindo</h1>
+      <span class="material-symbols-outlined" id="logoutButton">logout</span>
+    </header>
+
+    <div class="container">
+      <button id="addTaskButton">Adicionar Tarefa</button>
+
+      <div id="myModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <h3>Nova Tarefa</h3>
+          <label for="taskName">Nome:</label>
+          <input type="text" id="taskName" placeholder="Digite o nome da tarefa..." required>
+          <br>
+          <label for="taskDescription">Descrição:</label>
+          <textarea id="taskDescription" placeholder="Digite a descrição da tarefa..." required></textarea>
+          <br>
+          <button onclick="submitTask()">Salvar</button>
+          <button onclick="closeTaskForm()">Cancelar</button>
+        </div>
+      </div>
+
+      <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Editar Tarefa</h3>
+            <label for="editTaskName">Nome:</label>
+            <input type="text" id="editTaskName" required>
+            <br>
+            <label for="editTaskDescription">Descrição:</label>
+            <textarea id="editTaskDescription" required></textarea>
+            <br>
+            <br>
+            <label>Status:</label>
+            <div>
+              <label>
+                <input type="radio" name="status" value="Pendente" id="editStatusPendente" checked> Pendente
+              </label>
+              <label>
+                <input type="radio" name="status" value="Concluída" id="editStatusConcluido"> Concluído
+              </label>
+            </div>
+            <br>
+            <button id="saveEditButton">Salvar</button>
+            <button onclick="closeEditForm()">Cancelar</button>
+        </div>
+    </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Nome da Tarefa</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="taskTable"></tbody>
+      </table>
+
+      <script src="js/taskGrid.js"></script>
+      <script src="js/authVer.js"></script>
+      <div id="feedback" style="display:none;"></div>
+    </div>
+  </body>
+</html>
